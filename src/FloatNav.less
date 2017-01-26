@@ -1,0 +1,134 @@
+/**
+ * FloatNav Component Style for uxcore
+ * @author vincent.bian
+ *
+ * Copyright 2015-2016, Uxcore Team, Alinw.
+ * All rights reserved.
+ */
+ @__prefixCls: uxcore-float-nav;
+
+.@{__prefixCls} {
+  position: fixed;
+
+  &-scroll-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    .line-circle {
+      position: absolute;
+      &-top {
+        top: -15px;
+        left: 6px;
+      }
+      &-bottom {
+        bottom: -15px;
+        left: 6px;
+      }
+      circle {
+        stroke-width: 2px;
+        stroke: @border-color;
+        fill: #fff;
+      }
+    }
+  }
+  &-scroll-line {
+    margin-left: 15px;
+    width: 2px;
+    height: 100%;
+    background-color: @border-color;
+  }
+  &-container {
+    margin-right: 40px;
+    height: 100%;
+    overflow: hidden;
+  }
+  &-content {
+    margin-left: 30px;
+    padding: 5px 0;
+    font-size: 14px;
+    transition: transform @transition-ease @transition-duration; 
+    .@{__prefixCls}-item {
+      position: relative;
+      line-height: 1.5;
+      svg {
+        position: absolute;
+        left: -24px;
+        top: 4px;
+      }
+      .item-circle-icon {
+        fill: @border-color;
+        stroke: #fff;
+      }
+      .item-arrow-icon {
+        fill: @brand-primary;
+      }
+      &-title {
+        display: block;
+        padding: 3px 0;
+          text-indent: .5em;
+        color: @text-secondary-color;
+        &:hover {
+          background-color: @bg-hover-color;
+          text-decoration: none;
+        }
+      }
+      .@{__prefixCls}-item-active {
+        color: @brand-primary;
+      }
+      .@{__prefixCls}-subs {
+        .@{__prefixCls}-item {
+          padding-left: 1em;
+        }
+        .@{__prefixCls}-item-title {
+          text-indent: 1em;
+        }
+      }
+    }
+  }
+
+  &-control {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-top: -25px;
+    width: 20px;
+    height: 49px;
+    > a {
+      position: absolute;
+      width: 20px;
+      height: 25px;
+      display: block;
+      border: 1px solid @border-color;
+      font-family:kuma!important;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -webkit-text-stroke-width: .2px;
+      -moz-osx-font-smoothing: grayscale;
+      text-align: center;
+      color: @gray;
+      &:hover {
+        text-decoration: none;
+        color: @brand-primary;
+      }
+    }
+    &-prev {
+      left: 0;
+      top: 0;
+      border-radius: 8px 8px 0 0;
+      &:before {
+        content: '\e613';
+      }
+    }
+    &-next {
+      left: 0;
+      bottom: 0;
+      border-radius:  0 0 8px 8px;
+      &:before {
+        content: '\e614';
+      }
+    }
+  }
+}
+
