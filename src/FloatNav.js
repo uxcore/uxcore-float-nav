@@ -52,8 +52,10 @@ class FloatNav extends Component {
     };
     this.handleScrollUp = this.handleScrollUp.bind(this);
     this.handleScrollDown = this.handleScrollDown.bind(this);
-    this.handlePageScroll = throttle(this.handlePageScroll.bind(this), 100);
-    this.updateScroll = debounce(this.updateScroll, 200);
+    this.handlePageScroll = throttle(this.handlePageScroll.bind(this), 50);
+    this.updateScroll = debounce(this.updateScroll, 50, {
+      trailing: true,
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -65,6 +67,7 @@ class FloatNav extends Component {
   componentDidMount() {
     this.contentHeight = this.contentEle.offsetHeight;
     this.viewHeight = this.containerEle.offsetHeight;
+    this.maxScrollHeight = this.contentHeight - this.viewHeight;
     window.addEventListener('scroll', this.handlePageScroll, false);
     this.handlePageScroll();
   }
@@ -99,9 +102,22 @@ class FloatNav extends Component {
     const containerRect = this.containerEle.getBoundingClientRect();
     const activeRect = this.activeItem.getBoundingClientRect();
     const delta = activeRect.top - containerRect.top;
+    // console.log(delta, this.viewHeight)
     if (delta < 0) {
       this.handleScrollUp();
     } else if (delta > this.viewHeight) {
+      this.handleScrollDown();
+    }
+  }
+
+  centerActive() {
+    const containerRect = this.containerEle.getBoundingClientRect();
+    const activeRect = this.activeItem.getBoundingClientRect();
+    const delta = activeRect.top - containerRect.top;
+    let { scrollTop } = this.state;
+    if (delta / this.viewHeight < 1 / 3) {
+      this.handleScrollUp();
+    } else if (delta / this.viewHeight > 2 / 3) {
       this.handleScrollDown();
     }
   }
@@ -137,8 +153,8 @@ class FloatNav extends Component {
     const { stepLength } = this.props;
     let { scrollTop } = this.state;
     scrollTop += stepLength;
-    if (scrollTop + this.viewHeight >= this.contentHeight) {
-      scrollTop = this.contentHeight - this.viewHeight;
+    if (scrollTop >= this.maxScrollHeight) {
+      scrollTop = this.maxScrollHeight;
     }
     assign(state, {
       scrollTop,
@@ -169,11 +185,15 @@ class FloatNav extends Component {
     let itemProps, newIndex;
     return React.Children.map(children, (item, index) => {
       itemProps = assign({
-        onActive: (anchor, activeItem) => {
+        onActive: (anchor, activeItem, triggerType) => {
           this.activeItem = activeItem;
           this.setState({
             activeAnchor: anchor,
             trigger: 'click',
+          }, () => {
+            if (triggerType === 'click') {
+              this.centerActive();
+            }
           });
         },
         active: item.props.anchor && activeAnchor === item.props.anchor,

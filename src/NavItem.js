@@ -55,7 +55,7 @@ class NavItem extends Component {
     if (!anchor) {
       e.preventDefault();
     }
-    onActive(anchor, this.root);
+    onActive(anchor, this.root, 'click');
     onClick(anchor, orderNumber);
   }
 
