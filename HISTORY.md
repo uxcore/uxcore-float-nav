@@ -1,5 +1,9 @@
 # history
 
+## 0.1.3 / 2017-02-24
+---
+* fix: expection when content is empty.
+
 ## 0.1.2 / 2017-02-24
 ---
 * fix: update height when props.height changed

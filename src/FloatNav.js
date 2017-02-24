@@ -171,16 +171,23 @@ class FloatNav extends Component {
 
   handlePageScroll(e) {
     const { anchors } = this.state;
-    let rect, activeAnchor;
+    let rect, anchorNode, activeAnchor;
     anchors.some(anchor => {
-      rect = this.wrapper.querySelector(`#${anchor}`).getBoundingClientRect();
-      activeAnchor = anchor;
-      return rect.top > 0;
+      anchorNode = this.wrapper.querySelector(`#${anchor}`);
+      if (anchorNode) {
+        rect = anchorNode.getBoundingClientRect();
+        rect = this.wrapper.querySelector(`#${anchor}`).getBoundingClientRect();
+        activeAnchor = anchor;
+        return rect.top > 0;
+      }
+      return false;
     });
-    this.setState({
-      activeAnchor,
-      trigger: 'scroll',
-    });
+    if (activeAnchor) {
+      this.setState({
+        activeAnchor,
+        trigger: 'scroll',
+      });
+    }
   }
 
   renderNavItems() {
