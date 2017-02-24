@@ -65,14 +65,15 @@ class FloatNav extends Component {
   }
 
   componentDidMount() {
-    this.contentHeight = this.contentEle.offsetHeight;
-    this.viewHeight = this.containerEle.offsetHeight;
-    this.maxScrollHeight = this.contentHeight - this.viewHeight;
+    this.updateComponentHeight();
     window.addEventListener('scroll', this.handlePageScroll, false);
     this.handlePageScroll();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    if (prevProps.height !== this.props.height) {
+      this.updateComponentHeight();
+    }
     if (this.activeItem) {
       this.updateScroll();
     }
@@ -80,6 +81,12 @@ class FloatNav extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handlePageScroll, false);
+  }
+
+  updateComponentHeight() {
+    this.contentHeight = this.contentEle.offsetHeight;
+    this.viewHeight = this.containerEle.offsetHeight;
+    this.maxScrollHeight = this.contentHeight - this.viewHeight;
   }
 
   getAnchors(props) {

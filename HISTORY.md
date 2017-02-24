@@ -1,5 +1,9 @@
 # history
 
+## 0.1.2 / 2017-02-24
+---
+* fix: update height when props.height changed
+
 ## 0.1.1 / 2017-02-22
 ---
 * adjust scroll position when clicked items.
