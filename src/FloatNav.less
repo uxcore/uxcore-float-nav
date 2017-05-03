@@ -5,11 +5,10 @@
  * Copyright 2015-2016, Uxcore Team, Alinw.
  * All rights reserved.
  */
- @__prefixCls: uxcore-float-nav;
 
+@__prefixCls: uxcore-float-nav;
 .@{__prefixCls} {
   position: fixed;
-
   &-scroll-bar {
     position: absolute;
     left: 0;
@@ -37,7 +36,7 @@
     margin-left: 15px;
     width: 2px;
     height: 100%;
-    background-color: @border-color;
+    background-color: @split-line-color;
   }
   &-container {
     margin-right: 40px;
@@ -45,20 +44,20 @@
     overflow: hidden;
   }
   &-content {
-    margin-left: 30px;
+    margin-left: 15px;
     padding: 5px 0;
     font-size: 14px;
-    transition: transform @transition-ease @transition-duration; 
+    transition: transform @transition-ease @transition-duration;
     .@{__prefixCls}-item {
       position: relative;
-      line-height: 1.5;
+      line-height: 1.5; // padding-left: 16px;
       svg {
         position: absolute;
-        left: -24px;
+        left: -9px;
         top: 4px;
       }
       .item-circle-icon {
-        fill: @border-color;
+        fill: #A5AFBC;
         stroke: #fff;
       }
       .item-arrow-icon {
@@ -66,52 +65,52 @@
       }
       &-title {
         display: block;
-        padding: 3px 0;
-          text-indent: .5em;
+        padding: 3px 0; // text-indent: .5em;
         color: @text-secondary-color;
+        transition: all 0.2s ease;
         &:hover {
-          background-color: @bg-hover-color;
+          // background-color: @bg-hover-color;
+          color: @brand-primary;
           text-decoration: none;
         }
       }
-      .@{__prefixCls}-item-active {
+      .@{__prefixCls}-item-title-active {
         color: @brand-primary;
-      }
-      .@{__prefixCls}-subs {
-        .@{__prefixCls}-item {
-          padding-left: 1em;
-        }
-        .@{__prefixCls}-item-title {
-          text-indent: 1em;
+        background-color: @brand-primary-alpha-7;
+        position: relative;
+        &:before {
+          content: ' ';
+          position: absolute;
+          border-left: 2px solid @brand-primary;
+          height: 100%;
+          left: 0;
+          top: 0;
         }
       }
     }
   }
-
   &-control {
     position: absolute;
     right: 0;
     top: 50%;
     margin-top: -25px;
-    width: 20px;
-    height: 49px;
-    > a {
+    width: 17px;
+    height: 31px;
+    >a.kuma-button {
       position: absolute;
-      width: 20px;
-      height: 25px;
+      cursor: pointer;
+      text-decoration: none;
+      width: 17px;
+      height: 16px;
+      line-height: 16px;
+      padding: 0;
       display: block;
-      border: 1px solid @border-color;
-      font-family:kuma!important;
-      font-size: 16px;
+      font-family: kuma!important;
+      font-size: 14px;
       -webkit-font-smoothing: antialiased;
       -webkit-text-stroke-width: .2px;
       -moz-osx-font-smoothing: grayscale;
       text-align: center;
-      color: @gray;
-      &:hover {
-        text-decoration: none;
-        color: @brand-primary;
-      }
     }
     &-prev {
       left: 0;
@@ -120,15 +119,17 @@
       &:before {
         content: '\e613';
       }
+      &:hover {
+        z-index: 1;
+      }
     }
     &-next {
       left: 0;
       bottom: 0;
-      border-radius:  0 0 8px 8px;
+      border-radius: 0 0 8px 8px;
       &:before {
         content: '\e614';
       }
     }
   }
 }
-

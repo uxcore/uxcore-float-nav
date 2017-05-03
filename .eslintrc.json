@@ -3,11 +3,17 @@
   "plugins": [
     "react"
   ],
+  "parser": "babel-eslint",
   "env": {
-    "browser": true
+    "browser": true,
+    "mocha": true,
   },
   "rules": {
     "import/no-extraneous-dependencies": "off",
-    "react/jsx-no-bind": "off"
+    "react/jsx-no-bind": "off",
+    "react/no-unused-prop-types": "off",
+    "jsx-a11y/anchor-has-content": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "react/forbid-prop-types": "off"
   }
 }

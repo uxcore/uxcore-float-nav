@@ -36,6 +36,8 @@ class NavItem extends Component {
     rootNode: PropTypes.bool,
     active: PropTypes.bool,
     subActiveAnchor: PropTypes.string,
+    children: PropTypes.any,
+    level: PropTypes.number,
   };
 
   constructor(props) {
@@ -60,7 +62,7 @@ class NavItem extends Component {
   }
 
   renderSubNav() {
-    const { prefixCls, children, orderNumber, onActive, subActiveAnchor } = this.props;
+    const { prefixCls, children, orderNumber, onActive, subActiveAnchor, level } = this.props;
     if (!children || children.length === 0) {
       return null;
     }
@@ -77,6 +79,8 @@ class NavItem extends Component {
             itemProps = assign({
               onActive,
               active: item.props.anchor && subActiveAnchor === item.props.anchor,
+              subActiveAnchor,
+              level: level + 1,
             }, cloneProps);
             if (orderNumber) {
               assign(itemProps, {
@@ -84,7 +88,7 @@ class NavItem extends Component {
               });
             }
             return React.cloneElement(item, itemProps);
-          }) 
+          })
         }
       </div>
     );
@@ -92,7 +96,7 @@ class NavItem extends Component {
 
   renderCircleIcon() {
     const { rootNode, active } = this.props;
-    if (rootNode) {
+    if (rootNode && !active) {
       return (
         <svg width="20" height="20">
           <circle cx="10" cy="10" r="3" className="item-circle-icon" />
@@ -103,31 +107,40 @@ class NavItem extends Component {
   }
 
   renderArrowIcon() {
-    const { active } = this.props;
+    /* const { active } = this.props;
     if (active) {
       return (
         <svg width="21" height="20" viewBox="0 0 90 60">
           <polygon points="0,0 60,0 90,30 60,60 0,60" className="item-arrow-icon" />
         </svg>
       );
-    }
+    }*/
     return null;
   }
 
   render() {
-    const { prefixCls, title, orderNumber, anchor, active } = this.props;
+    const { prefixCls, title, orderNumber, anchor, active, level } = this.props;
     return (
-      <div className={classnames(`${prefixCls}-item`)} ref={node => (this.root = node)}>
+      <div
+        className={classnames(`${prefixCls}-item`, {
+          [`${prefixCls}-item-active`]: active,
+        })} ref={node => (this.root = node)}
+      >
         { this.renderCircleIcon() }
         { this.renderArrowIcon() }
         <a
           className={classnames(`${prefixCls}-item-title`, {
-            [`${prefixCls}-item-active`]: active,
+            [`${prefixCls}-item-title-active`]: active,
           })}
+          style={{
+            textIndent: `${(level + 1)}em`,
+          }}
           href={`#${anchor}`}
           onClick={this.handleClick}
         >
-          {orderNumber} {title}
+          <span className={`${prefixCls}-item-title-inner`}>
+            {orderNumber} {title}
+          </span>
         </a>
         { this.renderSubNav() }
       </div>

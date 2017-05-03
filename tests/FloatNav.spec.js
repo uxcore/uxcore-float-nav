@@ -7,9 +7,7 @@ import FloatNav from '../src';
 import FloatNavDemo from '../demo/FloatNavDemo';
 
 describe('FloatNav', () => {
-
   describe('Basic Tests', () => {
-
     const wrapper = mount(<FloatNavDemo />);
 
     it('should render into dom correctly', (done) => {
@@ -23,11 +21,9 @@ describe('FloatNav', () => {
       expect(wrapper.node.nav.state.activeAnchor).to.be('p1-1');
       done();
     });
-
   });
 
   describe('More Tests', () => {
-
     let component;
     beforeEach(() => {
       const container = document.createElement('div');
@@ -41,7 +37,5 @@ describe('FloatNav', () => {
       console.log(component.nav.state.scrollTop);
       done();
     });
-
   });
-
 });

@@ -39,6 +39,7 @@ class FloatNav extends Component {
     }),
     content: PropTypes.element,
     stepLength: PropTypes.number,
+    children: PropTypes.any,
   };
 
   constructor(props) {
@@ -58,16 +59,16 @@ class FloatNav extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      anchors: this.getAnchors(nextProps),
-    });
-  }
-
   componentDidMount() {
     this.updateComponentHeight();
     window.addEventListener('scroll', this.handlePageScroll, false);
     this.handlePageScroll();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      anchors: this.getAnchors(nextProps),
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -83,24 +84,30 @@ class FloatNav extends Component {
     window.removeEventListener('scroll', this.handlePageScroll, false);
   }
 
+  getAnchors(props) {
+    const { children } = props;
+    let anchors = [];
+    if (children) {
+      if (!children.length) {
+        anchors.push(children.props.anchor);
+        anchors = anchors.concat(this.getAnchors(children.props));
+      } else {
+        React.Children.forEach(children, (child) => {
+          const childAnchor = child.props.anchor;
+          if (childAnchor) {
+            anchors.push(childAnchor);
+          }
+          anchors = anchors.concat(this.getAnchors(child.props));
+        });
+      }
+    }
+    return anchors;
+  }
+
   updateComponentHeight() {
     this.contentHeight = this.contentEle.offsetHeight;
     this.viewHeight = this.containerEle.offsetHeight;
     this.maxScrollHeight = this.contentHeight - this.viewHeight;
-  }
-
-  getAnchors(props) {
-    const { children } = props;
-    const anchors = children.reduce((prev, cur) => {
-      if (cur.props.anchor) {
-        prev.push(cur.props.anchor);
-      }
-      if (Array.isArray(cur.props.children)) {
-        prev = prev.concat(cur.props.children.filter(d => d.props.anchor).map(d => d.props.anchor));
-      }
-      return prev;
-    }, []);
-    return anchors;
   }
 
   updateScroll() {
@@ -109,7 +116,6 @@ class FloatNav extends Component {
     const containerRect = this.containerEle.getBoundingClientRect();
     const activeRect = this.activeItem.getBoundingClientRect();
     const delta = activeRect.top - containerRect.top;
-    // console.log(delta, this.viewHeight)
     if (delta < 0) {
       this.handleScrollUp();
     } else if (delta > this.viewHeight) {
@@ -121,7 +127,6 @@ class FloatNav extends Component {
     const containerRect = this.containerEle.getBoundingClientRect();
     const activeRect = this.activeItem.getBoundingClientRect();
     const delta = activeRect.top - containerRect.top;
-    let { scrollTop } = this.state;
     if (delta / this.viewHeight < 1 / 3) {
       this.handleScrollUp();
     } else if (delta / this.viewHeight > 2 / 3) {
@@ -130,6 +135,9 @@ class FloatNav extends Component {
   }
 
   handleScrollUp(e) {
+    if (e) {
+      e.preventDefault();
+    }
     const state = {};
     if (e) {
       e.preventDefault();
@@ -150,6 +158,9 @@ class FloatNav extends Component {
   }
 
   handleScrollDown(e) {
+    if (e) {
+      e.preventDefault();
+    }
     const state = {};
     if (e) {
       e.preventDefault();
@@ -169,10 +180,12 @@ class FloatNav extends Component {
     this.setState(state);
   }
 
-  handlePageScroll(e) {
+  handlePageScroll() {
     const { anchors } = this.state;
-    let rect, anchorNode, activeAnchor;
-    anchors.some(anchor => {
+    let rect;
+    let anchorNode;
+    let activeAnchor;
+    anchors.some((anchor) => {
       anchorNode = this.wrapper.querySelector(`#${anchor}`);
       if (anchorNode) {
         rect = anchorNode.getBoundingClientRect();
@@ -196,7 +209,7 @@ class FloatNav extends Component {
     const cloneProps = {
       prefixCls,
     };
-    let itemProps, newIndex;
+    let itemProps;
     return React.Children.map(children, (item, index) => {
       itemProps = assign({
         onActive: (anchor, activeItem, triggerType) => {
@@ -212,6 +225,7 @@ class FloatNav extends Component {
         },
         active: item.props.anchor && activeAnchor === item.props.anchor,
         subActiveAnchor: activeAnchor,
+        level: 0,
       }, cloneProps);
       if (showOrderNumber) {
         assign(itemProps, {
@@ -229,7 +243,7 @@ class FloatNav extends Component {
         <svg width="20" height="20" className="line-circle line-circle-top">
           <circle cx="10" cy="10" r="4" />
         </svg>
-        <div className={classnames(`${prefixCls}-scroll-line`)}></div>
+        <div className={classnames(`${prefixCls}-scroll-line`)} />
         <svg width="20" height="20" className="line-circle line-circle-bottom">
           <circle cx="10" cy="10" r="4" />
         </svg>
@@ -241,17 +255,16 @@ class FloatNav extends Component {
     const { prefixCls } = this.props;
     return (
       <div className={classnames(`${prefixCls}-control`)}>
-        <a className={classnames(`${prefixCls}-control-prev`)} href="#" onClick={this.handleScrollUp}></a>
-        <a className={classnames(`${prefixCls}-control-next`)} href="#" onClick={this.handleScrollDown}></a>
+        <a className={classnames(`${prefixCls}-control-prev kuma-button-secondary kuma-button`)} onClick={this.handleScrollUp} />
+        <a className={classnames(`${prefixCls}-control-next kuma-button-secondary kuma-button`)} onClick={this.handleScrollDown} />
       </div>
     );
   }
 
   renderContent() {
-    const { content } = this.props;
-    return React.Children.map(content, (item) => {
-      return React.cloneElement(item);
-    });
+    // const { content } = this.props;
+    // return React.Children.map(content, item => React.cloneElement(item));
+    return this.props.content;
   }
 
   render() {
