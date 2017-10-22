@@ -1,10 +1,13 @@
 import expect from 'expect.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils, { Simulate } from 'react-addons-test-utils';
-import { mount } from 'enzyme';
+import TestUtils, { Simulate } from 'react-dom/test-utils';
+import Adapter from 'enzyme-adapter-react-15';
+import Enzyme, { mount } from 'enzyme';
 import FloatNav from '../src';
 import FloatNavDemo from '../demo/FloatNavDemo';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 describe('FloatNav', () => {
   describe('Basic Tests', () => {
@@ -18,7 +21,7 @@ describe('FloatNav', () => {
 
     it('should navigation correctly as click the nav item', (done) => {
       wrapper.find('.uxcore-float-nav-item-title').at(1).simulate('click');
-      expect(wrapper.node.nav.state.activeAnchor).to.be('p1-1');
+      expect(wrapper.instance().nav.state.activeAnchor).to.be('p1-1');
       done();
     });
   });

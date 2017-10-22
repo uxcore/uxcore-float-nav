@@ -5,7 +5,8 @@
  * Copyright 2015-2016, Uxcore Team, Alinw.
  * All rights reserved.
  */
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import assign from 'object-assign';
 
