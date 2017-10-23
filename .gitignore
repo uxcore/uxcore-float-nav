@@ -11,6 +11,7 @@
 .DS_Store
 Thumbs.db
 .project
+.history/*
 .*proj
 .svn/
 *.swp
@@ -26,5 +27,6 @@ spm_modules
 .happypack
 dist
 build
+coverage
+package-lock.json
 assets/**/*.css
-.vscode

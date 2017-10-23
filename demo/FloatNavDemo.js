@@ -81,7 +81,7 @@ class Demo extends React.Component {
 
   render() {
     return (
-      <div style={{ padding: 20 }}>
+      <div style={{ padding: '20px' }}>
         <FloatNav
           ref={node => (this.nav = node)}
           showOrderNumber

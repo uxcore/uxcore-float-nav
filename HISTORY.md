@@ -1,5 +1,8 @@
 # history
 
+## 0.2.1 / 2017-10-22
+* `CHANGED` support React 15.0
+
 ## 0.2.0 / 2017-05-03
 * `NEW` new style
 * `CHANGED` support more `navItem` nesting levels
