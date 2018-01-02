@@ -30,3 +30,6 @@ build
 coverage
 package-lock.json
 assets/**/*.css
+.vscode/*
+coverage/
+npm-debug.log.*
