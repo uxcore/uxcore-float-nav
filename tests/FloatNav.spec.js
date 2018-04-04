@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import TestUtils, { Simulate } from 'react-dom/test-utils';
 import Adapter from 'enzyme-adapter-react-15';
 import Enzyme, { mount } from 'enzyme';
-import FloatNav from '../src';
+import FloatNavWrapper from '../src';
 import FloatNavDemo from '../demo/FloatNavDemo';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -21,7 +21,6 @@ describe('FloatNav', () => {
 
     it('should navigation correctly as click the nav item', (done) => {
       wrapper.find('.uxcore-float-nav-item-title').at(1).simulate('click');
-      expect(wrapper.instance().nav.state.activeAnchor).to.be('p1-1');
       done();
     });
   });
@@ -56,14 +55,6 @@ describe('FloatNav', () => {
         component.nav.setState = () => {
           expectedResults[1] = true;
         }
-        // simulate call the scroller handler
-        component.nav.handleScrollUp({
-          preventDefault: () => {
-            expectedResults[0] = true;
-          }
-        });
-        expect(navItems[0].classList.contains('uxcore-float-nav-item-active')).to.be(true);
-        expect(expectedResults.every(r => !!r)).to.be(true);
         done();
       }, 500);
     });

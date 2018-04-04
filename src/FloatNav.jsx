@@ -146,7 +146,7 @@ class FloatNav extends Component {
         trigger: 'control',
       });
     }
-    const { stepLength } = this.props;
+    const { stepLength, onScrollChange } = this.props;
     let { scrollTop } = this.state;
     scrollTop -= stepLength;
     if (scrollTop <= 0) {
@@ -156,6 +156,9 @@ class FloatNav extends Component {
       scrollTop,
     });
     this.setState(state);
+    if (onScrollChange) {
+      onScrollChange(state.scrollTop);
+    }
   }
 
   handleScrollDown(e) {
@@ -169,7 +172,7 @@ class FloatNav extends Component {
         trigger: 'control',
       });
     }
-    const { stepLength } = this.props;
+    const { stepLength, onScrollChange } = this.props;
     let { scrollTop } = this.state;
     scrollTop += stepLength;
     if (scrollTop >= this.maxScrollHeight) {
@@ -179,6 +182,9 @@ class FloatNav extends Component {
       scrollTop,
     });
     this.setState(state);
+    if (onScrollChange) {
+      onScrollChange(state.scrollTop);
+    }
   }
 
   handlePageScroll() {
@@ -187,10 +193,14 @@ class FloatNav extends Component {
     let anchorNode;
     let activeAnchor;
     anchors.some((anchor) => {
-      anchorNode = this.wrapper.querySelector(`#${anchor}`);
+      if (this.props.wrapper) {
+        anchorNode = this.props.wrapper.querySelector(`#${anchor}`);
+      }
       if (anchorNode) {
         rect = anchorNode.getBoundingClientRect();
-        rect = this.wrapper.querySelector(`#${anchor}`).getBoundingClientRect();
+        if (this.props.wrapper) {
+          rect = this.props.wrapper.querySelector(`#${anchor}`).getBoundingClientRect();
+        }
         activeAnchor = anchor;
         return rect.top > 0;
       }
@@ -262,12 +272,6 @@ class FloatNav extends Component {
     );
   }
 
-  renderContent() {
-    // const { content } = this.props;
-    // return React.Children.map(content, item => React.cloneElement(item));
-    return this.props.content;
-  }
-
   render() {
     const { prefixCls, className, width, height, offset } = this.props;
     const { scrollTop } = this.state;
@@ -282,31 +286,21 @@ class FloatNav extends Component {
       transform: `translateY(-${scrollTop}px)`,
     };
     return (
-      <div>
+      <div {...renderProps}>
+        {this.renderScrollBar()}
         <div
-          className={`${prefixCls}-wrapper`}
-          ref={node => (this.wrapper = node)}
+          className={classnames(`${prefixCls}-container`)}
+          ref={node => (this.containerEle = node)}
         >
-          { this.renderContent() }
-        </div>
-        <div {...renderProps}>
-          { this.renderScrollBar() }
           <div
-            className={classnames(`${prefixCls}-container`)}
-            ref={node => (this.containerEle = node)}
+            className={classnames(`${prefixCls}-content`)}
+            ref={node => (this.contentEle = node)}
+            style={contentStyle}
           >
-            <div
-              className={classnames(`${prefixCls}-content`)}
-              ref={node => (this.contentEle = node)}
-              style={contentStyle}
-            >
-              {
-                this.renderNavItems()
-              }
-            </div>
+            {this.renderNavItems()}
           </div>
-          { this.renderControl() }
         </div>
+        {this.renderControl()}
       </div>
     );
   }

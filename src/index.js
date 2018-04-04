@@ -6,9 +6,11 @@
  * All rights reserved.
  */
 
+import FloatNavWrapper from './FloatNavWrapper';
 import FloatNav from './FloatNav';
 import NavItem from './NavItem';
 
-FloatNav.NavItem = NavItem;
+FloatNavWrapper.NavItem = NavItem;
+FloatNavWrapper.FloatNav = FloatNav;
 
-export default FloatNav;
+export default FloatNavWrapper;
