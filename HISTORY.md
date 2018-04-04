@@ -1,5 +1,8 @@
 # history
 
+## 0.3.0 / 2018-04-04
+* feat: separate wrapper and floatnav
+
 ## 0.2.1 / 2017-10-22
 * `CHANGED` support React 15.0
 
