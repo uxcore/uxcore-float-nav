@@ -34,6 +34,7 @@
     "floatNav"
   ],
   "devDependencies": {
+    "uxcore-tools": "^0.3.0",
     "console-polyfill": "^0.2.2",
     "enzyme": "^3.0.0",
     "expect.js": "~0.3.1",
