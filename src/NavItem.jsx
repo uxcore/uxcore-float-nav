@@ -9,9 +9,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import assign from 'object-assign';
+import { polyfill } from 'react-lifecycles-compat';
 
 class NavItem extends Component {
-
   static displayName = 'NavItem';
   static defaultProps = {
     title: '',
@@ -47,10 +47,15 @@ class NavItem extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.active && !this.props.active) {
+  getSnapshotBeforeUpdate(prevProps) {
+    if (!prevProps.active && this.props.active) {
       this.props.onActive(this.props.anchor, this.root);
     }
+    return null;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // hold for getSnapshotBeforeUpdate method
   }
 
   handleClick(e) {
@@ -149,4 +154,4 @@ class NavItem extends Component {
   }
 }
 
-export default NavItem;
+export default polyfill(NavItem);

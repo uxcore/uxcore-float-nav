@@ -2,7 +2,7 @@ import expect from 'expect.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils, { Simulate } from 'react-dom/test-utils';
-import Adapter from 'enzyme-adapter-react-15';
+import Adapter from 'enzyme-adapter-react-16';
 import Enzyme, { mount } from 'enzyme';
 import FloatNavWrapper from '../src';
 import FloatNavDemo from '../demo/FloatNavDemo';
