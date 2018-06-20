@@ -5,12 +5,34 @@
  * Copyright 2015-2016, Uxcore Team, Alinw.
  * All rights reserved.
  */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import assign from 'object-assign';
 import throttle from 'lodash/throttle';
 import debounce from 'lodash/debounce';
+import { polyfill } from 'react-lifecycles-compat';
+
+function getAnchors(props) {
+  const { children } = props;
+  let anchors = [];
+  if (children) {
+    if (!children.length) {
+      anchors.push(children.props.anchor);
+      anchors = anchors.concat(getAnchors(children.props));
+    } else {
+      React.Children.forEach(children, (child) => {
+        const childAnchor = child.props.anchor;
+        if (childAnchor) {
+          anchors.push(childAnchor);
+        }
+        anchors = anchors.concat(getAnchors(child.props));
+      });
+    }
+  }
+  return anchors;
+}
 
 class FloatNav extends Component {
 
@@ -43,9 +65,15 @@ class FloatNav extends Component {
     children: PropTypes.any,
   };
 
+  static getDerivedStateFromProps(nextProps) {
+    return {
+      anchors: getAnchors(nextProps),
+    };
+  }
+
   constructor(props) {
     super(props);
-    const anchors = this.getAnchors(props);
+    const anchors = getAnchors(props);
     this.state = {
       activeAnchor: '',
       scrollTop: 0,
@@ -66,11 +94,6 @@ class FloatNav extends Component {
     this.handlePageScroll();
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      anchors: this.getAnchors(nextProps),
-    });
-  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.height !== this.props.height) {
@@ -83,26 +106,6 @@ class FloatNav extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handlePageScroll, false);
-  }
-
-  getAnchors(props) {
-    const { children } = props;
-    let anchors = [];
-    if (children) {
-      if (!children.length) {
-        anchors.push(children.props.anchor);
-        anchors = anchors.concat(this.getAnchors(children.props));
-      } else {
-        React.Children.forEach(children, (child) => {
-          const childAnchor = child.props.anchor;
-          if (childAnchor) {
-            anchors.push(childAnchor);
-          }
-          anchors = anchors.concat(this.getAnchors(child.props));
-        });
-      }
-    }
-    return anchors;
   }
 
   updateComponentHeight() {
@@ -306,4 +309,4 @@ class FloatNav extends Component {
   }
 }
 
-export default FloatNav;
+export default polyfill(FloatNav);

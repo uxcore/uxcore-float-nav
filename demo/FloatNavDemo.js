@@ -26,6 +26,10 @@ class Demo extends React.Component {
     console.log('handleClick', link, orderNumber);
   }
 
+  handleActive() {
+    console.log(arguments);
+  }
+
   renderArticle() {
     return (
       <div className="article">
@@ -95,7 +99,7 @@ class Demo extends React.Component {
             <NavItem title={'参选总统'} anchor={'p1-2'} />
             <NavItem title={'宣誓就职'} anchor={'p1-3'} />
           </NavItem>
-          <NavItem title={'多重身份'} anchor={'p2'}>
+          <NavItem title={'多重身份'} anchor={'p2'} onActive={() => console.log('多重身份')}>
             <NavItem title={'名人'} anchor={'p2-1'} />
             <NavItem title={'富商'} anchor={'p2-2'} />
             <NavItem title={'作家'} anchor={'p2-3'} />
