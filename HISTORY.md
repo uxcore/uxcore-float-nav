@@ -1,5 +1,9 @@
 # history
 
+## 0.3.2 / 2018-09-13
+
+`CHANGED` support js style export
+
 ## 0.3.0 / 2018-04-04
 * feat: separate wrapper and floatnav
 
