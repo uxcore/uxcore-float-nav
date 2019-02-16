@@ -1,5 +1,9 @@
 # history
 
+## 0.3.3 / 2019-02-16
+
+`NEW` new feature: spot bar
+
 ## 0.3.2 / 2018-09-13
 
 `CHANGED` support js style export
