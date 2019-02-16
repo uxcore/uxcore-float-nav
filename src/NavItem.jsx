@@ -18,11 +18,12 @@ class NavItem extends Component {
     prefixCls: '',
     orderNumber: '',
     anchor: '',
-    onClick: () => {},
-    onActive: () => {},
+    onClick: () => { },
+    onActive: () => { },
     rootNode: true,
     active: false,
     subActiveAnchor: '',
+    spotOnly: false,
   };
   static propTypes = {
     title: PropTypes.oneOfType([
@@ -39,6 +40,7 @@ class NavItem extends Component {
     subActiveAnchor: PropTypes.string,
     children: PropTypes.any,
     level: PropTypes.number,
+    spotOnly: PropTypes.bool,
   };
 
   constructor(props) {
@@ -68,13 +70,14 @@ class NavItem extends Component {
   }
 
   renderSubNav() {
-    const { prefixCls, children, orderNumber, onActive, subActiveAnchor, level } = this.props;
+    const { prefixCls, children, orderNumber, onActive, subActiveAnchor, level, spotOnly } = this.props;
     if (!children || children.length === 0) {
       return null;
     }
     const cloneProps = {
       prefixCls,
       rootNode: false,
+      spotOnly,
     };
     let itemProps;
 
@@ -125,15 +128,31 @@ class NavItem extends Component {
   }
 
   render() {
-    const { prefixCls, title, orderNumber, anchor, active, level } = this.props;
+    const { prefixCls, title, orderNumber, anchor, active, level, spotOnly } = this.props;
+    if (spotOnly) {
+      return (
+        <div
+          className={classnames(`${prefixCls}-item`, {
+            [`${prefixCls}-item-active`]: active,
+          })} ref={node => (this.root = node)}
+        >
+          <div className={
+            classnames(`${prefixCls}-spot-circle`, {
+              [`${prefixCls}-spot-circle-active`]: active
+            })
+          }></div>
+          {this.renderSubNav()}
+        </div>
+      );
+    }
     return (
       <div
         className={classnames(`${prefixCls}-item`, {
           [`${prefixCls}-item-active`]: active,
         })} ref={node => (this.root = node)}
       >
-        { this.renderCircleIcon() }
-        { this.renderArrowIcon() }
+        {this.renderCircleIcon()}
+        {this.renderArrowIcon()}
         <a
           className={classnames(`${prefixCls}-item-title`, {
             [`${prefixCls}-item-title-active`]: active,
@@ -148,7 +167,7 @@ class NavItem extends Component {
             {orderNumber} {title}
           </span>
         </a>
-        { this.renderSubNav() }
+        {this.renderSubNav()}
       </div>
     );
   }

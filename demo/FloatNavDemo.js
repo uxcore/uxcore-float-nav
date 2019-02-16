@@ -91,6 +91,7 @@ class Demo extends React.Component {
           showOrderNumber
           height={250}
           content={this.renderArticle()}
+          hoverable
         >
           <NavItem title={'人物经历'} anchor={'p1'}>
             <NavItem title={'创业经历'} anchor={'p1-1'} onClick={this.handleClick}>

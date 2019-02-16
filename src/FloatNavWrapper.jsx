@@ -24,6 +24,7 @@ export default class FloatNavWrapper extends Component {
     },
     content: null,
     stepLength: 50,
+    hoverable: false,
   };
   static propTypes = {
     prefixCls: PropTypes.string,
@@ -38,6 +39,7 @@ export default class FloatNavWrapper extends Component {
     content: PropTypes.element,
     stepLength: PropTypes.number,
     children: PropTypes.any,
+    hoverable: PropTypes.bool,
   };
 
   constructor(props) {
