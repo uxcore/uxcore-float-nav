@@ -84,6 +84,7 @@ With content wrapper.
 |offset|object|no|{right: 20, bottom: 20}|nav's position offset|
 |content|react element|yes|null|place the content with anchor here|
 |stepLength|number|no|50|scroll length|
+|hoverable|boolean|no|false|enable the haverable feature
 
 ### FloatNav
 

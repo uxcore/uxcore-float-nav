@@ -49,6 +49,7 @@ class FloatNav extends Component {
     },
     content: null,
     stepLength: 50,
+    hoverable: false,
   };
   static propTypes = {
     prefixCls: PropTypes.string,
@@ -63,6 +64,7 @@ class FloatNav extends Component {
     content: PropTypes.element,
     stepLength: PropTypes.number,
     children: PropTypes.any,
+    hoverable: PropTypes.bool,
   };
 
   static getDerivedStateFromProps(nextProps) {
@@ -79,6 +81,7 @@ class FloatNav extends Component {
       scrollTop: 0,
       anchors,
       trigger: '',
+      spotActive: false,
     };
     this.handleScrollUp = this.handleScrollUp.bind(this);
     this.handleScrollDown = this.handleScrollDown.bind(this);
@@ -275,37 +278,126 @@ class FloatNav extends Component {
     );
   }
 
+  renderSpot() {
+    const { prefixCls, children, showOrderNumber } = this.props;
+    const { activeAnchor } = this.state;
+    const cloneProps = {
+      prefixCls,
+      spotOnly: true,
+    };
+    let itemProps;
+    return React.Children.map(children, (item, index) => {
+      itemProps = assign({
+        onActive: (anchor, activeItem, triggerType) => {
+          this.activeItem = activeItem;
+          this.setState({
+            activeAnchor: anchor,
+            trigger: 'click',
+          }, () => {
+            if (triggerType === 'click') {
+              this.centerActive();
+            }
+          });
+        },
+        active: item.props.anchor && activeAnchor === item.props.anchor,
+        subActiveAnchor: activeAnchor,
+        level: 0,
+      }, cloneProps);
+      if (showOrderNumber) {
+        assign(itemProps, {
+          orderNumber: `${index + 1}`,
+        });
+      }
+      return React.cloneElement(item, itemProps);
+    });
+  }
+
+  renderSpotControl() {
+    const { prefixCls } = this.props;
+    return (
+      <div className={classnames(`${prefixCls}-control`)}>
+        <a className={classnames(`${prefixCls}-control-prev kuma-button-secondary kuma-button`)} onClick={this.handleScrollUp} />
+        <a className={classnames(`${prefixCls}-control-next kuma-button-secondary kuma-button`)} onClick={this.handleScrollDown} />
+      </div>
+    );
+  }
+
   render() {
-    const { prefixCls, className, width, height, offset } = this.props;
-    const { scrollTop } = this.state;
-    const renderProps = {
+    const { prefixCls, className, width, height, offset, hoverable } = this.props;
+    const { scrollTop, spotActive } = this.state;
+    let renderProps = {
       className: classnames(prefixCls, className),
       style: assign({
         width,
         height,
-      }, offset),
+      }, { top: 200, right: 20, ...offset }),
     };
     const contentStyle = {
       transform: `translateY(-${scrollTop}px)`,
     };
-    return (
+
+    if (hoverable) {
+      renderProps.className = classnames(renderProps.className, 'hoverable');
+      renderProps.style.right = 0;
+      renderProps.onMouseLeave = () => {
+        this.setState({ spotActive: false });
+      };
+    }
+
+    let result = (
       <div {...renderProps}>
-        {this.renderScrollBar()}
         <div
-          className={classnames(`${prefixCls}-container`)}
-          ref={node => (this.containerEle = node)}
+          style={{
+            height: height - 40,
+            width: width - 10,
+            position: 'relative',
+            marginTop: 20,
+            marginRight: 10,
+          }}
         >
+          {this.renderScrollBar()}
           <div
-            className={classnames(`${prefixCls}-content`)}
-            ref={node => (this.contentEle = node)}
-            style={contentStyle}
+            className={classnames(`${prefixCls}-container`)}
+            ref={node => (this.containerEle = node)}
           >
-            {this.renderNavItems()}
+            <div
+              className={classnames(`${prefixCls}-content`)}
+              ref={node => (this.contentEle = node)}
+              style={contentStyle}
+            >
+              {this.renderNavItems()}
+            </div>
           </div>
+          {this.renderControl()}
         </div>
-        {this.renderControl()}
       </div>
     );
+
+    if (hoverable) {
+      return (
+        <div
+          className={
+            classnames({
+              [`${prefixCls}-spot-active`]: spotActive
+            })
+          }
+        >
+          <div
+            className={`${prefixCls}-spot-wrap`}
+            style={{ top: (offset.top || 200) + 16 }}
+            onMouseEnter={() => {
+              this.setState({ spotActive: true });
+            }}
+          >
+            {this.renderSpot()}
+            {this.renderSpotControl()}
+          </div>
+          {result}
+        </div>
+      );
+    }
+
+    return result;
   }
 }
 

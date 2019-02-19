@@ -132,4 +132,66 @@
       }
     }
   }
+  &.hoverable {
+    background-color: #fff;
+    border-radius: @popup-border-radius 0 0 @popup-border-radius;
+    border: 1px solid @normal-alpha-7;
+    box-shadow: @box-shadow-3;
+    transform: translate3d(200px, 0, 0);
+    opacity: 0;
+    visibility: hidden;
+    transition: ease .3s;
+  }
+  &-spot-circle {
+    height: 4px;
+    width: 4px;
+    margin: 8px auto;
+    border-radius: 2px;
+    background-color: @normal-alpha-5;
+    &-active {
+      background-color: @brand-primary;
+      height: 6px;
+      width: 6px;
+      border-radius: 3px;
+      margin: 6px auto;
+    }
+  }
+  &-spot-wrap {
+    width: 16px;
+    background-color: #fff;
+    border: 1px solid @normal-alpha-6;
+    box-shadow: @box-shadow-2;
+    position: fixed;
+    right: 20px;
+    z-index: 1;
+    top: 200px;
+    transition: ease .3s;
+    .@{__prefixCls}-control {
+      position: static;
+      &-prev {
+        width: 16px !important;
+        left: -1px;
+        top: -16px;
+        border-color: @normal-alpha-6;
+      }
+      &-next {
+        width: 16px !important;
+        left: -1px;
+        bottom: -16px;
+        border-color: @normal-alpha-6;
+      }
+    }
+  }
+  &-spot-active {
+    .@{__prefixCls}.hoverable {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+      visibility: visible;
+    }
+    .@{__prefixCls}-spot-wrap {
+      visibility: hidden;
+      opacity: 0;
+      transform: translate3d(30px, 0, 0);
+    }
+  }
 }
