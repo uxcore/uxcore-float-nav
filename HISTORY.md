@@ -1,5 +1,9 @@
 # history
 
+## 0.3.4 / 2019-02-25
+
+`FIX` scroll event can not occurred when nav items is async
+
 ## 0.3.3 / 2019-02-16
 
 `NEW` new feature: spot bar

@@ -18,20 +18,14 @@ class Demo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      content: null,
+      nav: [],
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick(link, orderNumber) {
-    console.log('handleClick', link, orderNumber);
-  }
-
-  handleActive() {
-    console.log(arguments);
-  }
-
-  renderArticle() {
-    return (
+  setContenAsyncly() {
+    const content = (
       <div className="article">
         <h1>唐纳德·特朗普</h1>
         <div>唐纳德·特朗普，第45任美国总统，1946年6月14日生于美国纽约，政治家、商人、作家、主持人。特朗普1968年从宾夕法尼亚大学沃顿商学院毕业后，进入其父的房地产公司工作，并在1971年开始掌管公司运营。在随后几十年间，特朗普开始建立自己的房地产王国，人称“地产之王”。</div>
@@ -81,6 +75,172 @@ class Demo extends React.Component {
         <div>普京：毫无疑问，他很聪明且才能出众”，“他很有才华、人格出众”。</div>
       </div>
     );
+    this.setState({
+      content,
+    });
+  }
+
+  setNavAsyncly() {
+    const nav = [
+      {
+        title: '人物经历',
+        id: 'p1',
+        children: [
+          {
+            title: '创业经历',
+            id: 'p1-1',
+            children: [
+              {
+                title: '创业经历'
+              }
+            ],
+          }
+        ],
+      },
+      {
+        title: '人物经历',
+        id: 'p1',
+        children: [
+          {
+            title: '创业经历',
+            id: 'p1-1',
+            children: [
+              {
+                title: '创业经历'
+              }
+            ],
+          }
+        ],
+      },
+      {
+        title: '人物经历',
+        id: 'p1',
+        children: [
+          {
+            title: '创业经历',
+            id: 'p1-1',
+            children: [
+              {
+                title: '创业经历'
+              }
+            ],
+          }
+        ],
+      },
+      {
+        title: '人物经历',
+        id: 'p1',
+        children: [
+          {
+            title: '创业经历',
+            id: 'p1-1',
+            children: [
+              {
+                title: '创业经历'
+              }
+            ],
+          }
+        ],
+      },
+      {
+        title: '人物经历',
+        id: 'p1',
+        children: [
+          {
+            title: '创业经历',
+            id: 'p1-1',
+            children: [
+              {
+                title: '创业经历'
+              }
+            ],
+          }
+        ],
+      },
+      {
+        title: '人物经历',
+        id: 'p1',
+        children: [
+          {
+            title: '创业经历',
+            id: 'p1-1',
+            children: [
+              {
+                title: '创业经历'
+              }
+            ],
+          }
+        ],
+      },
+      {
+        title: '人物经历',
+        id: 'p1',
+        children: [
+          {
+            title: '创业经历',
+            id: 'p1-1',
+            children: [
+              {
+                title: '创业经历'
+              }
+            ],
+          }
+        ],
+      },
+      {
+        title: '人物经历',
+        id: 'p1',
+        children: [
+          {
+            title: '创业经历',
+            id: 'p1-1',
+            children: [
+              {
+                title: '创业经历'
+              }
+            ],
+          }
+        ],
+      }
+    ];
+    this.setState({
+      nav,
+    });
+  }
+
+  handleClick(link, orderNumber) {
+    console.log('handleClick', link, orderNumber);
+  }
+
+  handleActive() {
+    console.log(arguments);
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setContenAsyncly();
+    }, 2000);
+    setTimeout(() => {
+      this.setNavAsyncly();
+    }, 1000);
+  }
+
+  renderNavItems(list, prefixIdx) {
+    let { nav } = this.state;
+    if (list) {
+      nav = list;
+    }
+    if (nav && nav.length) {
+      return nav.map((n, idx) => (
+        <NavItem key={idx} title={n.title} anchor={`${prefixIdx}-${idx}`}>
+          {
+            n.children ? this.renderNavItems(n.children, idx) : null
+          }
+        </NavItem>
+      ));
+    } else {
+      return null;
+    }
   }
 
   render() {
@@ -89,11 +249,14 @@ class Demo extends React.Component {
         <FloatNav
           ref={node => (this.nav = node)}
           showOrderNumber
-          height={250}
-          content={this.renderArticle()}
+          height={500}
+          content={this.state.content}
           hoverable
         >
-          <NavItem title={'人物经历'} anchor={'p1'}>
+          {
+            this.renderNavItems()
+          }
+          {/*<NavItem title={'人物经历'} anchor={'p1'}>
             <NavItem title={'创业经历'} anchor={'p1-1'} onClick={this.handleClick}>
               <NavItem title={'创业经历2'} anchor={'p1-1-1'} />
             </NavItem>
@@ -112,7 +275,7 @@ class Demo extends React.Component {
             <NavItem title={'第三任妻子'} anchor={'p3-3'} />
             <NavItem title={'五个子女'} anchor={'p3-4'} />
           </NavItem>
-          <NavItem title={'人物评价'} anchor={'p4'} />
+          <NavItem title={'人物评价'} anchor={'p4'} />*/}
         </FloatNav>
       </div>
     );
