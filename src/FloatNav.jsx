@@ -82,6 +82,7 @@ class FloatNav extends Component {
       anchors,
       trigger: '',
       spotActive: false,
+      spotHeight: 0,
     };
     this.handleScrollUp = this.handleScrollUp.bind(this);
     this.handleScrollDown = this.handleScrollDown.bind(this);
@@ -97,13 +98,18 @@ class FloatNav extends Component {
     this.handlePageScroll();
   }
 
-
   componentDidUpdate(prevProps) {
     if (prevProps.height !== this.props.height) {
       this.updateComponentHeight();
     }
     if (this.activeItem) {
       this.updateScroll();
+    }
+    if (this.spotWrap && this.state.spotHeight !== this.spotWrap.offsetHeight) {
+      this.updateComponentHeight();
+      this.setState({
+        spotHeight: this.spotWrap.offsetHeight,
+      });
     }
   }
 
@@ -336,9 +342,18 @@ class FloatNav extends Component {
       transform: `translateY(-${scrollTop}px)`,
     };
 
+    const innerStyle = {
+      height: height - 40,
+      width: width - 10,
+      position: 'relative',
+      marginTop: 20,
+      marginRight: 10,
+    };
     if (hoverable) {
       renderProps.className = classnames(renderProps.className, 'hoverable');
       renderProps.style.right = 0;
+      renderProps.style.top = '50%';
+      renderProps.style.marginTop = -(renderProps.style.height / 2);
       renderProps.onMouseLeave = () => {
         this.setState({ spotActive: false });
       };
@@ -346,15 +361,7 @@ class FloatNav extends Component {
 
     let result = (
       <div {...renderProps}>
-        <div
-          style={{
-            height: height - 40,
-            width: width - 10,
-            position: 'relative',
-            marginTop: 20,
-            marginRight: 10,
-          }}
-        >
+        <div style={innerStyle}>
           {this.renderScrollBar()}
           <div
             className={classnames(`${prefixCls}-container`)}
@@ -384,7 +391,10 @@ class FloatNav extends Component {
         >
           <div
             className={`${prefixCls}-spot-wrap`}
-            style={{ top: (offset.top || 200) + 16 }}
+            ref={c => this.spotWrap = c }
+            style={{
+              marginTop: -(this.state.spotHeight / 2),
+            }}
             onMouseEnter={() => {
               this.setState({ spotActive: true });
             }}
